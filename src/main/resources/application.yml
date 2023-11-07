@@ -1,0 +1,40 @@
+
+server:
+  port: 5000
+  servlet:
+    context-path: /checkin-service
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always
+    include-exception: true
+
+spring:
+  application:
+    name: checkin-service
+  main:
+    allow-bean-definition-overriding: true
+  jpa:
+    open-in-view: true
+    hibernate:
+      id:
+        new_generator_mappings: false
+      ddl-auto: update
+      naming-strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        enable_lazy_load_no_trans: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/checkin_dev?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: root
+springdoc:
+  swagger-ui:
+    title: Checkin Service
+    description: Microservice responsible for Checkin Services
+    version: 1.0.0
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+
