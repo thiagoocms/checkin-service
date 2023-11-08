@@ -8,18 +8,18 @@ import com.google.zxing.common.BitMatrix;
 import com.nassau.checkinservice.domain.ClassRoom;
 import com.nassau.checkinservice.domain.User;
 import com.nassau.checkinservice.dto.classroom.ClassRoomDTO;
+import com.nassau.checkinservice.dto.classroom.ClassRoomSimpleDTO;
 import com.nassau.checkinservice.dto.user.UserDTO;
 import com.nassau.checkinservice.dto.user.UserFilterDTO;
-import com.nassau.checkinservice.dto.user.UserLoginDTO;
+import com.nassau.checkinservice.dto.user.UserSimpleDTO;
+import com.nassau.checkinservice.exception.BadRequestException;
 import com.nassau.checkinservice.repository.ClassRoomRepository;
 import com.nassau.checkinservice.repository.UserRepository;
 import com.nassau.checkinservice.search.ClassRoomSpecification;
 import com.nassau.checkinservice.search.SearchCriteria;
-import com.nassau.checkinservice.search.UserSpecification;
 import com.nassau.checkinservice.util.JsonParser;
 import com.nassau.checkinservice.util.SearchCriteriaUtil;
 import com.nassau.checkinservice.validation.ClassRoomValidation;
-import com.nassau.checkinservice.validation.UserValidation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
@@ -77,7 +77,7 @@ public class ClassRoomService extends AbstractMessage {
 
     public Page<ClassRoomDTO> findByFilters(Pageable pageable, UserFilterDTO userFilterDTO) {
         List<SearchCriteria> criteria = SearchCriteriaUtil.buildCriteria(userFilterDTO);
-            Page<ClassRoom> page = this.classRoomRepository.findAll(ClassRoomSpecification.listAllByCriteria(criteria), pageable);
+        Page<ClassRoom> page = this.classRoomRepository.findAll(ClassRoomSpecification.listAllByCriteria(criteria), pageable);
         return modelMapper.map(page, new TypeToken<Page<ClassRoomDTO>>() {
         }.getType());
     }
@@ -93,7 +93,10 @@ public class ClassRoomService extends AbstractMessage {
         ClassRoom classRoom = classRoomValidation.checkExistClassRoom(id);
         byte[] qrCode = new byte[0];
         try {
-            String data = JsonParser.toJson(classRoom);
+            ClassRoomSimpleDTO classRoomSimpleDTO = modelMapper.map(classRoom, ClassRoomSimpleDTO.class);
+            classRoomSimpleDTO.setUserName(classRoom.getUser().getName());
+            classRoomSimpleDTO.setUserId(classRoom.getUser().getId());
+            String data = JsonParser.toJson(classRoomSimpleDTO);
             int width = 300;
             int height = 300;
             Map<EncodeHintType, Object> hints = new HashMap<>();
@@ -112,18 +115,18 @@ public class ClassRoomService extends AbstractMessage {
             ImageIO.write(image, "png", outputStream);
 
             qrCode = outputStream.toByteArray();
-            } catch (IOException | WriterException e) {
-                e.printStackTrace();
-                throw badRequestException("Não foi possivel gerar o qrCode");
-            }
-        classRoom.setQrCode(qrCode);
-        classRoomRepository.save(classRoom);
+            classRoom.setQrCode(Base64.getEncoder().encodeToString(qrCode));
+            classRoomRepository.save(classRoom);
+        } catch (IOException | WriterException e) {
+            e.printStackTrace();
+            throw new BadRequestException("Não foi possivel gerar o qrCode");
+        }
         return qrCode;
     }
 
-    public List<UserDTO> findCheck(Long id) {
+    public List<UserSimpleDTO> findCheck(Long id) {
         List<User> users = userRepository.findAllByCheck(id);
-        return modelMapper.map(users, new TypeToken<List<UserDTO>>() {
+        return modelMapper.map(users, new TypeToken<List<UserSimpleDTO>>() {
         }.getType());
     }
 }

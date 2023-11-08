@@ -5,6 +5,7 @@ import com.nassau.checkinservice.constants.AppConstants;
 import com.nassau.checkinservice.dto.classroom.ClassRoomDTO;
 import com.nassau.checkinservice.dto.user.UserDTO;
 import com.nassau.checkinservice.dto.user.UserFilterDTO;
+import com.nassau.checkinservice.dto.user.UserSimpleDTO;
 import com.nassau.checkinservice.service.AbstractMessage;
 import com.nassau.checkinservice.service.ClassRoomService;
 import lombok.RequiredArgsConstructor;
@@ -79,8 +80,8 @@ public class ClassRoomResource extends AbstractMessage {
     }
 
     @GetMapping("/{id}/check")
-    public ResponseEntity<List<UserDTO>> findAllByCheck(@PathVariable Long id) {
-        List<UserDTO> list = classRoomService.findCheck(id);
+    public ResponseEntity<List<UserSimpleDTO>> findAllByCheck(@PathVariable Long id) {
+        List<UserSimpleDTO> list = classRoomService.findCheck(id);
         return ResponseEntity
                 .ok()
                 .body(list);

@@ -2,7 +2,12 @@ package com.nassau.checkinservice.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nassau.checkinservice.bean.CustomModelMapper;
+import com.nassau.checkinservice.domain.ClassRoom;
+import com.nassau.checkinservice.dto.classroom.ClassRoomSimpleDTO;
 import com.nassau.checkinservice.service.MessageService;
+import org.joda.time.DateTime;
+import org.modelmapper.Conditions;
+import org.modelmapper.PropertyMap;
 import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +46,24 @@ public class ModelMapperConfig {
                 return null;
             }
             return Instant.ofEpochMilli(source).atZone(ZoneOffset.UTC).toLocalDate();
+        });
+
+        TypeMap<Long, DateTime> timestampToDateTimeTypeMap = modelMapper.createTypeMap(Long.class, DateTime.class);
+        timestampToDateTimeTypeMap.setConverter(context -> {
+            Long source = context.getSource();
+            if (source == null) {
+                return null;
+            }
+            return new DateTime(source);
+        });
+
+        TypeMap<DateTime, Long> dateTimeToTimestampTypeMap = modelMapper.createTypeMap(DateTime.class, Long.class);
+        dateTimeToTimestampTypeMap.setConverter(context -> {
+            DateTime source = context.getSource();
+            if (source == null) {
+                return null;
+            }
+            return source.getMillis();
         });
 
         return modelMapper;

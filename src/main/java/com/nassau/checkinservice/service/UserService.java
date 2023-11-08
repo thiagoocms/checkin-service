@@ -7,6 +7,8 @@ import com.nassau.checkinservice.dto.checkin.CheckinDTO;
 import com.nassau.checkinservice.dto.user.UserDTO;
 import com.nassau.checkinservice.dto.user.UserFilterDTO;
 import com.nassau.checkinservice.dto.user.UserLoginDTO;
+import com.nassau.checkinservice.exception.BadRequestException;
+import com.nassau.checkinservice.exception.ResourceNotFoundException;
 import com.nassau.checkinservice.repository.CheckinRepository;
 import com.nassau.checkinservice.repository.ClassRoomRepository;
 import com.nassau.checkinservice.repository.UserRepository;
@@ -82,21 +84,21 @@ public class UserService extends AbstractMessage {
     }
 
     public UserDTO login(UserLoginDTO dto) throws Throwable {
-        if ((Objects.isNull(dto.getLogin()) || dto.getLogin().isEmpty()) && (Objects.isNull(dto.getPassword()) || dto.getPassword().isEmpty())) {
-            throw badRequestException("Todos os campos são obrigatórios.");
+        if ((Objects.isNull(dto.getLogin()) || dto.getLogin().isEmpty()) || (Objects.isNull(dto.getPassword()) || dto.getPassword().isEmpty())) {
+            throw new BadRequestException("Todos os campos são obrigatórios.");
         }
         User user = userRepository.findFirstByLoginIgnoreCaseAndPasswordAndDeletedIsFalse(dto.getLogin(), dto.getPassword());
         if (Objects.isNull(user)) {
-            throw resourceNotFoundException("Usuário não encontrado.");
+            throw new ResourceNotFoundException("Usuário não encontrado.");
         }
-        return null;
+        return modelMapper.map(user, UserDTO.class);
     }
 
     public CheckinDTO check(Long id, Long classRoomId) throws Throwable {
         User user = userValidation.checkExistUser(id);
         ClassRoom classRoom = classRoomRepository.findFirstById(classRoomId);
         if (classRoom == null) {
-            throw resourceNotFoundException("Sala não encontrada.");
+            throw new ResourceNotFoundException("Sala não encontrada.");
         }
         Checkin checkin = checkinRepository.save(new Checkin(user, classRoom));
         return modelMapper.map(checkin, CheckinDTO.class);

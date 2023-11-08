@@ -44,6 +44,7 @@ public class ClassRoom extends AbstractAuditingEntity implements Serializable {
     @Column(name = "shift", length = 50)
     private String shift;
 
+    @Type(type = "text")
     @Column(name = "qr_code")
-    private  byte[] qrCode;
+    private  String qrCode;
 }

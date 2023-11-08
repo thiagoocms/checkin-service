@@ -13,9 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     User findFirstById(Long id);
     User findFirstByLoginIgnoreCaseAndPasswordAndDeletedIsFalse(String login, String password);
 
-    @Query(value = "SELECT users.* FROM tb_checkins check \n" +
-            "INNER JOIN tb_users users ON check.user_id = users.id \n" +
-            "INNER JOIN tb_classroom classroom ON check.classroom_id = classroom.id \n" +
-            "WHERE classroom.id = ?1", nativeQuery = true)
+    @Query(value = "SELECT u.* FROM tb_checkins c \n" +
+            "INNER JOIN tb_users u ON c.user_id = u.id \n" +
+            "WHERE c.classroom_id = :classRoomId", nativeQuery = true)
     List<User> findAllByCheck(Long classRoomId);
 }
