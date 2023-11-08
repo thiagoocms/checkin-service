@@ -8,8 +8,8 @@ import com.google.zxing.common.BitMatrix;
 import com.nassau.checkinservice.domain.ClassRoom;
 import com.nassau.checkinservice.domain.User;
 import com.nassau.checkinservice.dto.classroom.ClassRoomDTO;
+import com.nassau.checkinservice.dto.classroom.ClassRoomQrCodeDTO;
 import com.nassau.checkinservice.dto.classroom.ClassRoomSimpleDTO;
-import com.nassau.checkinservice.dto.user.UserDTO;
 import com.nassau.checkinservice.dto.user.UserFilterDTO;
 import com.nassau.checkinservice.dto.user.UserSimpleDTO;
 import com.nassau.checkinservice.exception.BadRequestException;
@@ -89,9 +89,9 @@ public class ClassRoomService extends AbstractMessage {
         return modelMapper.map(classRoom, ClassRoomDTO.class);
     }
 
-    public byte[] generateQRCode(Long id) throws Throwable {
+    public ClassRoomQrCodeDTO generateQRCode(Long id) throws Throwable {
         ClassRoom classRoom = classRoomValidation.checkExistClassRoom(id);
-        byte[] qrCode = new byte[0];
+        String qrCode = null;
         try {
             ClassRoomSimpleDTO classRoomSimpleDTO = modelMapper.map(classRoom, ClassRoomSimpleDTO.class);
             classRoomSimpleDTO.setUserName(classRoom.getUser().getName());
@@ -114,14 +114,14 @@ public class ClassRoomService extends AbstractMessage {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ImageIO.write(image, "png", outputStream);
 
-            qrCode = outputStream.toByteArray();
-            classRoom.setQrCode(Base64.getEncoder().encodeToString(qrCode));
-            classRoomRepository.save(classRoom);
+            qrCode = Base64.getEncoder().encodeToString(outputStream.toByteArray());
+            classRoom.setQrCode(qrCode);
+            classRoom = classRoomRepository.save(classRoom);
         } catch (IOException | WriterException e) {
             e.printStackTrace();
             throw new BadRequestException("Não foi possivel gerar o qrCode");
         }
-        return qrCode;
+        return modelMapper.map(classRoom, ClassRoomQrCodeDTO.class);
     }
 
     public List<UserSimpleDTO> findCheck(Long id) {

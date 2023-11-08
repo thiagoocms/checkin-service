@@ -3,6 +3,7 @@ package com.nassau.checkinservice.rest;
 
 import com.nassau.checkinservice.constants.AppConstants;
 import com.nassau.checkinservice.dto.classroom.ClassRoomDTO;
+import com.nassau.checkinservice.dto.classroom.ClassRoomQrCodeDTO;
 import com.nassau.checkinservice.dto.user.UserDTO;
 import com.nassau.checkinservice.dto.user.UserFilterDTO;
 import com.nassau.checkinservice.dto.user.UserSimpleDTO;
@@ -72,8 +73,8 @@ public class ClassRoomResource extends AbstractMessage {
     }
 
     @PutMapping("/{id}/generate")
-    public ResponseEntity<byte[]> generateQRCode(@PathVariable Long id) throws Throwable {
-        byte[] qrCode = classRoomService.generateQRCode(id);
+    public ResponseEntity<ClassRoomQrCodeDTO> generateQRCode(@PathVariable Long id) throws Throwable {
+        ClassRoomQrCodeDTO qrCode = classRoomService.generateQRCode(id);
         return ResponseEntity
                 .ok()
                 .body(qrCode);
