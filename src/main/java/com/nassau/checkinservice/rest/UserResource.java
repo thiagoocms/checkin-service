@@ -3,6 +3,7 @@ package com.nassau.checkinservice.rest;
 
 import com.nassau.checkinservice.constants.AppConstants;
 import com.nassau.checkinservice.dto.checkin.CheckinDTO;
+import com.nassau.checkinservice.dto.classroom.ClassRoomDTO;
 import com.nassau.checkinservice.dto.user.UserDTO;
 import com.nassau.checkinservice.dto.user.UserFilterDTO;
 import com.nassau.checkinservice.dto.user.UserLoginDTO;
@@ -83,6 +84,14 @@ public class UserResource extends AbstractMessage {
     @PutMapping("/{id}/check/{classRoomId}")
     public ResponseEntity<CheckinDTO> check(@PathVariable Long id, @PathVariable Long classRoomId) throws Throwable {
         CheckinDTO dto = userService.check(id, classRoomId);
+        return ResponseEntity
+                .ok()
+                .body(dto);
+    }
+
+    @GetMapping("/{id}/classrooms")
+    public ResponseEntity<List<ClassRoomDTO>> findByCheckinUserId(@PathVariable Long id) throws Throwable {
+        List<ClassRoomDTO> dto = userService.findByCheckinUserId(id);
         return ResponseEntity
                 .ok()
                 .body(dto);
