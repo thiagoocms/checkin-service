@@ -3,9 +3,8 @@ package com.nassau.checkinservice.rest;
 
 import com.nassau.checkinservice.constants.AppConstants;
 import com.nassau.checkinservice.dto.classroom.ClassRoomDTO;
+import com.nassau.checkinservice.dto.classroom.ClassRoomFilterDTO;
 import com.nassau.checkinservice.dto.classroom.ClassRoomQrCodeDTO;
-import com.nassau.checkinservice.dto.user.UserDTO;
-import com.nassau.checkinservice.dto.user.UserFilterDTO;
 import com.nassau.checkinservice.dto.user.UserSimpleDTO;
 import com.nassau.checkinservice.service.AbstractMessage;
 import com.nassau.checkinservice.service.ClassRoomService;
@@ -51,7 +50,7 @@ public class ClassRoomResource extends AbstractMessage {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ClassRoomDTO>> findByFilters(Pageable pageable, UserFilterDTO filtersDTO) {
+    public ResponseEntity<Page<ClassRoomDTO>> findByFilters(Pageable pageable, ClassRoomFilterDTO filtersDTO) {
         Page<ClassRoomDTO> page = classRoomService.findByFilters(pageable, filtersDTO);
         return ResponseEntity
                 .ok()

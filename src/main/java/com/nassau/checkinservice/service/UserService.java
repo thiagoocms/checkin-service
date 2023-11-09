@@ -4,6 +4,7 @@ import com.nassau.checkinservice.domain.Checkin;
 import com.nassau.checkinservice.domain.ClassRoom;
 import com.nassau.checkinservice.domain.User;
 import com.nassau.checkinservice.dto.checkin.CheckinDTO;
+import com.nassau.checkinservice.dto.classroom.ClassRoomDTO;
 import com.nassau.checkinservice.dto.user.UserDTO;
 import com.nassau.checkinservice.dto.user.UserFilterDTO;
 import com.nassau.checkinservice.dto.user.UserLoginDTO;
@@ -102,5 +103,11 @@ public class UserService extends AbstractMessage {
         }
         Checkin checkin = checkinRepository.save(new Checkin(user, classRoom));
         return modelMapper.map(checkin, CheckinDTO.class);
+    }
+
+    public List<ClassRoomDTO> findByCheckinUserId(Long id) {
+        List<ClassRoom> classRoomList = classRoomRepository.findAllByCheckinUserId(id);
+        return modelMapper.map(classRoomList, new TypeToken<List<ClassRoomDTO>>() {
+        }.getType());
     }
 }

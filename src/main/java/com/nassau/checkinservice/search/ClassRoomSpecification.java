@@ -115,6 +115,9 @@ public class ClassRoomSpecification implements Specification<ClassRoom> {
             case "documentNumber":
                 predicates.add(builder.equal(root.get(criteria.getKey()), criteria.getValue()));
                 break;
+            case "userId":
+                predicates.add(builder.equal(root.join("user", JoinType.INNER).get("id"), criteria.getValue()));
+            break;
         }
     }
 

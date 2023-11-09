@@ -8,6 +8,7 @@ import com.google.zxing.common.BitMatrix;
 import com.nassau.checkinservice.domain.ClassRoom;
 import com.nassau.checkinservice.domain.User;
 import com.nassau.checkinservice.dto.classroom.ClassRoomDTO;
+import com.nassau.checkinservice.dto.classroom.ClassRoomFilterDTO;
 import com.nassau.checkinservice.dto.classroom.ClassRoomQrCodeDTO;
 import com.nassau.checkinservice.dto.classroom.ClassRoomSimpleDTO;
 import com.nassau.checkinservice.dto.user.UserFilterDTO;
@@ -75,8 +76,8 @@ public class ClassRoomService extends AbstractMessage {
         return modelMapper.map(classRoom, ClassRoomDTO.class);
     }
 
-    public Page<ClassRoomDTO> findByFilters(Pageable pageable, UserFilterDTO userFilterDTO) {
-        List<SearchCriteria> criteria = SearchCriteriaUtil.buildCriteria(userFilterDTO);
+    public Page<ClassRoomDTO> findByFilters(Pageable pageable, ClassRoomFilterDTO filterDTO) {
+        List<SearchCriteria> criteria = SearchCriteriaUtil.buildCriteria(filterDTO);
         Page<ClassRoom> page = this.classRoomRepository.findAll(ClassRoomSpecification.listAllByCriteria(criteria), pageable);
         return modelMapper.map(page, new TypeToken<Page<ClassRoomDTO>>() {
         }.getType());
