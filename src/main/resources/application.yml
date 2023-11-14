@@ -18,17 +18,23 @@ spring:
     open-in-view: true
     hibernate:
       id:
-        new_generator_mappings: false
+        new_generator_mappings: true
       ddl-auto: update
       naming-strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
+
         enable_lazy_load_no_trans: true
+    database-platform: org.hibernate.dialect.H2Dialect
   datasource:
-    url: jdbc:mysql://localhost:3306/checkin_dev?useUnicode=true&characterEncoding=utf8&useSSL=false
-    username: root
-    password: root
+    url: jdbc:h2:mem:checkin_dev
+    username: sa
+    password: password
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 springdoc:
   swagger-ui:
     title: Checkin Service

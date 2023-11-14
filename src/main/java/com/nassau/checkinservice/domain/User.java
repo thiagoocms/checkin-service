@@ -25,14 +25,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "name", length = 255)
     private String name;
 
-    @Column(name = "document_number", length = 50, nullable = false, unique = true)
+    @Column(name = "document_number", length = 50, nullable = false)
     private String documentNumber;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "document_type", nullable = false)
     private UserDocumentTypeEnum documentType;
 
-    @Column(name = "login", length = 255, nullable = false, unique = true)
+    @Column(name = "login", length = 255, nullable = false)
     private String login;
 
     @Column(name = "password", length = 20, nullable = false)

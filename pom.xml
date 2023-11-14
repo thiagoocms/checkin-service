@@ -81,6 +81,11 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.10.13</version> <!-- Versão atualizada -->
 		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
