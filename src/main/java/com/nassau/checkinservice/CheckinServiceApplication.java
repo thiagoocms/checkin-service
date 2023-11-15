@@ -17,7 +17,8 @@ import java.net.UnknownHostException;
 @OpenAPIDefinition(
 		info = @Info(title = "checkinAPI",version = "1.0.0", description = "project of Spring Boot for app Back and"),
 		servers = {
-				@Server(url = "http://127.0.0.1:5000/checkin-service")
+				@Server(url = "http://127.0.0.1:5000/checkin-service"),
+				@Server(url = "https://checkin-service.onrender.com/checkin-service")
 		})
 public class CheckinServiceApplication {
 
