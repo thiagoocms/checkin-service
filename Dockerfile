@@ -1,5 +1,17 @@
-FROM amazoncorretto:11
+
+FROM ubuntu:latest AS build
+
+RUN apt-get update
+RUN apt-get install openjdk-11-jdk -y
+COPY . .
+
+RUN apt-get install maven -y
+RUN mvn clean install
+
+FROM openjdk:11-jdk-slim
+
 EXPOSE 5000
-ARG JAR_FILE=target/*.jar
-ENTRYPOINT ["java","-jar","/app.jar","com.nassau.checkinservice.CheckinServiceApplication"]
-CMD java -XX:MaxRAMPercentage=80.0 -XX:MinRAMPercentage=50.0 -XX:MaxMetaspaceSize=256M -XX:MaxDirectMemorySize=50M -XX:ReservedCodeCacheSize=250M -jar /checkin-service.jar
+
+COPY --from=build /target/deploy_render-1.0.0.jar app.jar
+
+ENTRYPOINT [ "java", "-jar", "app.jar" ]
