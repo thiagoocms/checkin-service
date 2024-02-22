@@ -79,8 +79,7 @@ public class ClassRoomService extends AbstractMessage {
     public Page<ClassRoomDTO> findByFilters(Pageable pageable, ClassRoomFilterDTO filterDTO) {
         List<SearchCriteria> criteria = SearchCriteriaUtil.buildCriteria(filterDTO);
         Page<ClassRoom> page = this.classRoomRepository.findAll(ClassRoomSpecification.listAllByCriteria(criteria), pageable);
-        return modelMapper.map(page, new TypeToken<Page<ClassRoomDTO>>() {
-        }.getType());
+        return page.map((element) -> modelMapper.map(element, ClassRoomDTO.class));
     }
 
     public ClassRoomDTO delete(Long id) throws Throwable {
